@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="it"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DOMINION — Horizon Games Studio’s</title>
+<meta name="description" content="Dominion, il nuovo open world di Horizon Games Studio’s. Lancio internazionale il 25 agosto 2027 alle 12:00.">
+<meta name="theme-color" content="#04030a"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800;900&family=Rajdhani:wght@400;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#04030a;--p:#ff2bd6;--c:#18f0ff;--o:#ff9a3c;--g:#2dffb0;--t:#f3f1ff;--m:#8a85a8;--l:#ffffff1c;color-scheme:dark}
+*{box-sizing:border-box}html{background:var(--bg);scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--t);font:300 17px/1.7 Inter,sans-serif;overflow-x:hidden}
+body.lock{overflow:hidden}
+h1,h2,h3,.or{font-family:Orbitron,sans-serif;text-transform:uppercase}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.aur{position:fixed;inset:0;z-index:0;background:radial-gradient(60% 40% at 15% 10%,#ff2bd633,transparent),radial-gradient(50% 40% at 90% 30%,#18f0ff2b,transparent),radial-gradient(60% 40% at 50% 100%,#ff9a3c26,transparent);animation:ab 14s ease-in-out infinite alternate}
+@keyframes ab{to{filter:hue-rotate(40deg) brightness(1.2)}}
+/* intro: nessuna barra, nessun tasto salta */
+#intro{position:fixed;inset:0;z-index:100;background:#000;transition:opacity 1.2s,visibility 1.2s;user-select:none}
+#intro.off{opacity:0;visibility:hidden}
+#intro video{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+@media(max-aspect-ratio:1/1){#intro video{object-fit:contain}}
+#go{position:absolute;inset:0;display:none;place-items:center;background:#000a;color:#fff;font:700 13px Orbitron;letter-spacing:.3em;cursor:pointer;border:0;width:100%}
+#go.on{display:grid}
+header.top{position:fixed;z-index:20;left:0;right:0;top:0;padding:calc(12px + env(safe-area-inset-top,0px)) 4vw 12px;display:flex;justify-content:space-between;align-items:center;gap:12px;background:linear-gradient(#04030aee,#0000)}
+.logo{font:900 14px Orbitron;letter-spacing:.3em;color:#fff;white-space:nowrap}.logo span{color:var(--p)}
+.tiles{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.tiles a{font:600 12px Rajdhani;letter-spacing:.18em;text-transform:uppercase;color:var(--m);text-decoration:none;padding:7px 12px;border:1px solid transparent;border-radius:8px;transition:.3s;white-space:nowrap}
+.tiles a:hover,.tiles a:focus-visible{color:#fff;border-color:var(--c);box-shadow:0 0 18px #18f0ff55,inset 0 0 12px #18f0ff22;outline:0}
+main{position:relative;z-index:2}
+/* HERO: solo foto, mai tagliata */
+.hero{position:relative;padding:calc(64px + env(safe-area-inset-top,0px)) 0 0;display:flex;justify-content:center;background:#000}
+.hero img{display:block;width:auto;height:auto;max-width:100%;max-height:calc(100vh - 64px);margin:0 auto}
+.mq{background:linear-gradient(90deg,var(--p),var(--o),var(--c));color:#04030a;overflow:hidden;white-space:nowrap;font:800 13px Orbitron;letter-spacing:.3em;padding:10px 0}
+.mq span{display:inline-block;animation:mq 26s linear infinite}@keyframes mq{to{transform:translateX(-50%)}}
+/* countdown */
+.cd{padding:70px 6vw 30px;text-align:center}
+.cd .tag{display:block}
+.cd h2{font-size:clamp(24px,4vw,46px);margin:8px 0 26px}
+.cdg{display:flex;justify-content:center;gap:clamp(8px,2vw,20px);flex-wrap:wrap}
+.cdg div{min-width:min(21vw,150px);padding:20px 10px;border:1px solid var(--l);border-radius:14px;background:#ffffff08;backdrop-filter:blur(8px);box-shadow:0 0 30px #ff2bd622}
+.cdg b{display:block;font:900 clamp(30px,7vw,72px)/1 Orbitron;color:#fff;text-shadow:0 0 18px var(--c);font-variant-numeric:tabular-nums}
+.cdg small{font:600 11px Rajdhani;letter-spacing:.3em;color:var(--m);text-transform:uppercase}
+.cd p{color:var(--m);font-size:14px;margin:22px 0 0}
+section.s{padding:110px 6vw;max-width:1400px;margin:auto;position:relative}
+.tag{font:600 12px Rajdhani;letter-spacing:.45em;color:var(--c);text-transform:uppercase;text-shadow:0 0 10px var(--c)}
+h2{font:900 clamp(34px,6.5vw,88px)/1 Orbitron;margin:10px 0 22px}
+h2 em{font-style:normal;color:transparent;-webkit-text-stroke:1px var(--c)}
+.p{max-width:720px;color:#b9b3d6}
+.r{opacity:0;transform:translateY(50px);filter:blur(8px);transition:1s cubic-bezier(.2,.8,.1,1)}.r.on{opacity:1;transform:none;filter:none}
+.btn{display:inline-block;margin:22px 12px 0 0;padding:14px 30px;font:700 12px Orbitron;letter-spacing:.25em;color:#fff;text-decoration:none;border:1px solid var(--c);border-radius:10px;background:#18f0ff14;box-shadow:0 0 20px #18f0ff44;transition:.3s;cursor:pointer}
+.btn:hover{background:var(--c);color:#000;box-shadow:0 0 40px var(--c)}.btn.pk{border-color:var(--p);background:#ff2bd614;box-shadow:0 0 20px #ff2bd644}.btn.pk:hover{background:var(--p)}
+.lvs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:44px}
+.lvs div,.card{padding:20px;border:1px solid var(--l);border-radius:14px;background:#ffffff06;backdrop-filter:blur(8px);transition:.3s}
+.lvs div{font:600 12px Rajdhani;letter-spacing:.2em;text-transform:uppercase;color:var(--m)}
+.lvs div:hover,.card:hover{transform:translateY(-6px);border-color:var(--p);box-shadow:0 10px 40px #ff2bd633}
+.lvs b{display:block;font:900 30px Orbitron;color:var(--c);text-shadow:0 0 14px var(--c)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:40px}
+.card h3{font:800 17px Orbitron;margin:0 0 8px}.card p{margin:0;font-size:15px;color:#b9b3d6}.card small{font:600 11px Rajdhani;letter-spacing:.25em;color:var(--g);text-transform:uppercase}
+.chap{display:flex;gap:14px;overflow-x:auto;padding:30px 0 10px;scroll-snap-type:x mandatory;scrollbar-width:none}
+.chap a{flex:0 0 min(220px,60vw);aspect-ratio:16/10;scroll-snap-align:start;border-radius:14px;border:1px solid var(--l);background:#ffffff08;text-decoration:none;color:#fff;padding:14px;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden;transition:.3s}
+.chap a:hover{transform:scale(1.07);border-color:var(--c);box-shadow:0 0 30px #18f0ff55}
+.chap a img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.7}.chap a span{position:relative;font:700 11px Orbitron;letter-spacing:.15em;text-shadow:0 2px 8px #000}
+.ep{display:grid;grid-template-columns:1.35fr 1fr;gap:5vw;align-items:center;padding:80px 6vw;max-width:1500px;margin:auto}
+.ep:nth-of-type(even){grid-template-columns:1fr 1.35fr}.ep:nth-of-type(even) .fr{order:2}
+.fr{position:relative;border-radius:18px;overflow:hidden;border:1px solid #ffffff2a;aspect-ratio:16/9;background:linear-gradient(135deg,#1a0a3a,#04101c);cursor:zoom-in;transition:transform .15s,box-shadow .3s,clip-path 1.2s cubic-bezier(.2,.8,.1,1);clip-path:inset(0 100% 0 0)}
+.ep.on .fr{clip-path:inset(0)}
+.fr:hover{box-shadow:0 20px 80px #ff2bd655,0 0 60px #18f0ff33}
+.fr img{width:100%;height:100%;object-fit:cover;display:block}
+.fr .n{position:absolute;left:14px;top:12px;font:900 12px Orbitron;color:#fff;letter-spacing:.2em;text-shadow:0 0 10px var(--p);z-index:2}
+.ep .tx .num{font:900 clamp(60px,9vw,130px)/1 Orbitron;color:transparent;-webkit-text-stroke:1px var(--p);opacity:.8}
+.ep h3{font:800 clamp(22px,3vw,38px)/1.1 Orbitron;margin:4px 0 14px}
+.ep .tx p{color:#b9b3d6;margin:0 0 14px}.ep .tx small{font:600 11px Rajdhani;letter-spacing:.3em;color:var(--g);text-transform:uppercase}
+/* The Last Moichan */
+.cover{margin-top:34px;border-radius:18px;border:1px solid #ffffff2a;overflow:hidden;background:#000;cursor:zoom-in}
+.cover img{display:block;width:100%;height:auto}
+.shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:14px}
+.shots img{display:block;width:100%;height:auto;border-radius:14px;border:1px solid var(--l);cursor:zoom-in;transition:.3s}
+.shots img:hover{border-color:var(--c);box-shadow:0 0 40px #18f0ff44;transform:translateY(-4px)}
+.badge{display:inline-block;padding:4px 12px;border:1px solid var(--o);color:var(--o);border-radius:99px;font:700 11px Orbitron;letter-spacing:.2em}
+.stack{perspective:1200px;height:360px;position:relative;margin-top:30px}
+.stack div{position:absolute;left:50%;top:50%;width:min(420px,70vw);aspect-ratio:16/9;margin:-118px 0 0 -210px;border:1px solid #18f0ff88;background:#18f0ff10;border-radius:8px;transform:rotateX(62deg) rotateZ(-35deg) translateZ(calc((var(--i) - 2)*var(--sp,40px)));box-shadow:0 0 22px #18f0ff33}
+.stack div:nth-child(2){border-color:var(--p);background:#ff2bd612}.stack div:nth-child(4){border-color:var(--o);background:#ff9a3c10}
+.spec{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:40px}
+.spec div{padding:22px;border:1px solid var(--l);border-radius:14px;background:#ffffff06;font:600 11px Rajdhani;letter-spacing:.2em;color:var(--m)}.spec b{display:block;font:900 26px Orbitron;color:#fff;letter-spacing:.02em}
+.ent{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px;margin-top:40px}
+.ent>div{padding:26px;border-radius:16px;border:1px solid var(--l);background:linear-gradient(145deg,#ffffff0a,#ffffff02);transition:.4s}.ent>div:hover{transform:translateY(-8px);border-color:var(--c)}
+.ent h3{font:800 18px Orbitron;margin:0}.ent small{font:600 12px Rajdhani;color:var(--c);letter-spacing:.2em}.ent p{margin:8px 0 0;font-size:14px;color:var(--m)}
+.root{font:700 12px Orbitron;letter-spacing:.3em;color:var(--o);margin:30px 0 0}
+.wave{display:flex;gap:3px;align-items:center;height:150px;margin-top:40px}
+.wave i{flex:1;min-width:2px;background:linear-gradient(var(--c),var(--p));border-radius:3px;animation:w 1.3s ease-in-out infinite alternate;box-shadow:0 0 10px #ff2bd655}
+@keyframes w{from{height:4%}to{height:100%}}
+/* Aura MG: form e area artista */
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:40px;align-items:start}
+.box{padding:26px;border:1px solid var(--l);border-radius:16px;background:#ffffff08;backdrop-filter:blur(10px)}
+.box h3{font:800 18px Orbitron;margin:0 0 6px}.box>p{margin:0 0 16px;font-size:14px;color:var(--m)}
+label{display:block;font:600 11px Rajdhani;letter-spacing:.25em;color:var(--m);text-transform:uppercase;margin:12px 0 4px}
+input,textarea,select{width:100%;padding:11px 13px;border-radius:9px;border:1px solid #ffffff2e;background:#0a0620;color:#fff;font:400 15px Inter,sans-serif}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--c);outline-offset:1px}
+textarea{min-height:90px;resize:vertical}
+.msg{margin-top:12px;font-size:14px;min-height:20px}.msg.ok{color:var(--g)}.msg.er{color:#ff6b8a}
+.tabs{display:flex;gap:8px;margin-bottom:6px}.tabs button{flex:1;padding:9px;background:none;border:1px solid var(--l);border-radius:9px;color:var(--m);font:700 11px Orbitron;letter-spacing:.2em;cursor:pointer}.tabs button.on{color:#fff;border-color:var(--c);box-shadow:0 0 16px #18f0ff44}
+.hid{display:none!important}
+.prog{height:4px;background:#ffffff22;border-radius:4px;margin-top:12px;overflow:hidden}.prog b{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--p),var(--c))}
+.trk{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px 0;border-top:1px solid var(--l);font-size:14px}.trk span{color:var(--m);font-size:12px;display:block}
+.st{padding:3px 10px;border-radius:99px;font:700 10px Orbitron;letter-spacing:.12em;border:1px solid;white-space:nowrap}
+.st.in_revisione{color:var(--o)}.st.approvato{color:var(--g)}.st.da_modificare{color:var(--c)}.st.rifiutato{color:#ff6b8a}.st.integrato{color:var(--p)}
+.mini{background:none;border:1px solid #fff5;color:#fff;padding:6px 12px;border-radius:8px;font:600 11px Orbitron;cursor:pointer}
+footer{position:relative;z-index:3;padding:60px 6vw 100px;border-top:1px solid var(--l);font:600 11px Rajdhani;letter-spacing:.2em;color:var(--m);display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;text-transform:uppercase}
+/* lightbox */
+#lb{position:fixed;inset:0;z-index:90;background:#04030af2;display:none;place-items:center;padding:4vw}#lb.on{display:grid}#lb img{max-width:100%;max-height:80vh;border-radius:12px;box-shadow:0 0 80px #ff2bd655}
+#lb p{position:absolute;bottom:6vh;left:6vw;right:6vw;text-align:center;font:600 13px Rajdhani;letter-spacing:.2em;color:#fff}
+/* player soundtrack */
+#pl{position:fixed;z-index:40;left:max(12px,env(safe-area-inset-left,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:12px;padding:8px 8px 8px 8px;width:min(290px,calc(100vw - 24px));background:#0a0620ee;border:1px solid #ffffff30;border-radius:10px;backdrop-filter:blur(12px);box-shadow:0 8px 40px #000a,0 0 24px #ff2bd633;opacity:0;visibility:hidden;transition:.8s}
+#pl.on{opacity:1;visibility:visible}
+#pl img{width:48px;height:48px;border-radius:6px;object-fit:cover;flex:none;background:#1a0a3a}
+#pl div{min-width:0;flex:1;line-height:1.25}#pl b{display:block;font:800 11px Orbitron;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#pl span{font:600 11px Rajdhani;letter-spacing:.15em;color:var(--m);text-transform:uppercase}
+#pp{flex:none;width:40px;height:40px;border-radius:8px;border:1px solid var(--c);background:#18f0ff14;color:#fff;cursor:pointer;display:grid;place-items:center;transition:.3s}
+#pp:hover,#pp:focus-visible{background:var(--c);color:#000;outline:0}
+#pp svg{width:18px;height:18px;fill:currentColor}#pp .a{display:none}#pl.play #pp .a{display:block}#pl.play #pp .b{display:none}
+@media(max-width:820px){.ep,.ep:nth-of-type(even){grid-template-columns:1fr}.ep:nth-of-type(even) .fr{order:0}header.top{flex-direction:column;align-items:flex-start;gap:6px}.tiles{max-width:100%}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.r{opacity:1;transform:none;filter:none}.fr{clip-path:none}}
+
+/* ===== MASTER ===== */
+.hero{padding:0;height:100vh;height:100svh;min-height:520px;overflow:hidden;display:block}
+.hero>img{position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:cover;margin:0;animation:kb 26s ease-in-out infinite alternate}
+@keyframes kb{from{transform:scale(1)}to{transform:scale(1.09) translate(-1%,-1%)}}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(#04030a99,#0000 24%,#0000 68%,var(--bg)),repeating-linear-gradient(0deg,#0000 0 3px,#0000001a 3px 4px)}
+.hero .glow{position:absolute;inset:0;z-index:2;pointer-events:none;mix-blend-mode:screen;background:radial-gradient(30% 40% at 20% 70%,#ff2bd63a,transparent),radial-gradient(30% 40% at 85% 30%,#18f0ff33,transparent);animation:gl 7s ease-in-out infinite alternate}
+@keyframes gl{to{transform:translateX(3%) scale(1.15);opacity:.6}}
+.hero .sc{position:absolute;z-index:3;left:50%;bottom:30px;transform:translateX(-50%);text-align:center;font:700 11px Orbitron;letter-spacing:.4em;color:#fff;text-shadow:0 0 12px #000}
+.hero .sc i{display:block;margin:10px auto 0;width:2px;height:46px;background:linear-gradient(var(--c),#0000);animation:sc 1.8s infinite}
+@keyframes sc{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.hero .hb{position:absolute;z-index:3;right:4vw;bottom:30px;text-align:right;font:900 clamp(18px,3vw,34px) Orbitron;letter-spacing:.12em;text-shadow:0 0 22px var(--p),0 2px 10px #000}
+.hero .hb small{display:block;font:600 11px Rajdhani;letter-spacing:.4em;color:var(--c);text-shadow:0 2px 8px #000}
+@media(max-aspect-ratio:4/3){.hero{height:auto;aspect-ratio:16/9;min-height:0;margin-top:92px}.hero .sc{display:none}.hero>img{animation:none}}
+section.s{padding:70px 6vw}.cd{padding:50px 6vw 10px}.ep{padding:34px 6vw}
+.lvs{grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:16px}
+.lvs>div{min-height:260px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;font:400 14px/1.55 Inter,sans-serif;letter-spacing:0;text-transform:none;color:#b9b3d6;padding:24px}
+.lvs>div::before{content:"";position:absolute;inset:-45%;background:conic-gradient(from 0deg,transparent,var(--c),transparent 28%,var(--p),transparent 58%);opacity:.15;animation:spin 9s linear infinite}
+.lvs>div>*{position:relative}.lvs b{font-size:66px;line-height:1;margin-bottom:6px}
+.lvs h4{margin:0 0 6px;font:800 16px Orbitron;color:#fff;text-transform:uppercase}
+.bar{display:block;height:4px;background:#ffffff1f;border-radius:4px;margin-top:14px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--p),var(--c));box-shadow:0 0 10px var(--c);transition:width 1.8s cubic-bezier(.2,.8,.1,1) .4s}.r.on .bar i{width:var(--w)}
+@keyframes spin{to{transform:rotate(1turn)}}
+.grid{grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:18px}
+.card,.ent>div,.spec>div,.nums>div{position:relative;overflow:hidden;--mx:50%;--my:50%}
+.card{padding:34px;min-height:320px}
+.card::before,.ent>div::before,.spec>div::before{content:"";position:absolute;inset:0;background:radial-gradient(360px circle at var(--mx) var(--my),#18f0ff26,transparent 60%);opacity:0;transition:.4s;pointer-events:none}
+.card:hover::before,.ent>div:hover::before,.spec>div:hover::before{opacity:1}
+.card .gl{width:68px;height:68px;margin-bottom:18px;border-radius:18px;display:grid;place-items:center;font-size:32px;background:linear-gradient(135deg,#ff2bd633,#18f0ff33);border:1px solid #ffffff2a;animation:fl 4s ease-in-out infinite alternate}
+@keyframes fl{to{transform:translateY(-8px) rotate(6deg);box-shadow:0 16px 34px #18f0ff44}}
+.card h3{font-size:22px}.card p{font-size:16px;margin-bottom:10px}
+.card ul{margin:14px 0 0;padding:0;list-style:none}.card li{font-size:14px;color:var(--m);padding:7px 0 7px 20px;border-top:1px solid var(--l);position:relative}.card li::before{content:"";position:absolute;left:0;top:15px;width:7px;height:7px;background:var(--g);border-radius:50%;box-shadow:0 0 8px var(--g)}
+.ent{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}.ent>div{padding:34px;min-height:210px}.ent h3{font-size:22px}.ent p{font-size:15px}
+.spec>div{padding:34px;min-height:150px}.spec b{font-size:30px;background:linear-gradient(90deg,#fff,var(--c));-webkit-background-clip:text;color:transparent}
+.nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px}
+.nums>div{padding:30px 16px;text-align:center;border:1px solid var(--l);border-radius:16px;background:linear-gradient(160deg,#ffffff0d,#ffffff03)}
+.nums b{display:block;font:900 clamp(44px,7vw,90px)/1 Orbitron;background:linear-gradient(var(--c),var(--p));-webkit-background-clip:text;color:transparent;filter:drop-shadow(0 0 16px #18f0ff55)}
+.nums small{font:600 12px Rajdhani;letter-spacing:.3em;color:var(--m);text-transform:uppercase}
+.nums>div::after{content:"";position:absolute;left:-60%;top:0;width:40%;height:100%;background:linear-gradient(90deg,#0000,#ffffff18,#0000);transform:skewX(-20deg);animation:sh 5s infinite}
+@keyframes sh{to{left:140%}}
+.radar{position:relative;width:min(420px,100%);aspect-ratio:1;margin:auto;border-radius:50%;border:1px solid #2dffb066;background:repeating-radial-gradient(circle,#0000 0 11%,#2dffb02e 11.5% 12%),#04100a;overflow:hidden;box-shadow:0 0 60px #2dffb033}
+.radar::before{content:"";position:absolute;inset:0;background:conic-gradient(from 0deg,#2dffb077,#0000 25%);animation:spin 4s linear infinite}
+.radar b{position:absolute;left:var(--x);top:var(--y);width:12px;height:12px;border-radius:50%;background:var(--k);box-shadow:0 0 14px var(--k);animation:pg 2s infinite}
+@keyframes pg{50%{transform:scale(1.8);opacity:.4}}
+.mt{margin:0 0 18px;font:600 13px Rajdhani;letter-spacing:.15em;text-transform:uppercase;color:#fff}.mt span{float:right;font-family:Orbitron;font-weight:800}
+.mt.rd span{color:#ff6b8a}.mt.gr span{color:var(--g)}
+.don{width:150px;height:150px;border-radius:50%;margin:22px auto 8px;display:grid;place-items:center;-webkit-mask:radial-gradient(circle,#0000 52%,#000 53%);mask:radial-gradient(circle,#0000 52%,#000 53%);animation:spin 20s linear infinite}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.chips span{padding:7px 14px;border:1px solid var(--l);border-radius:99px;font:700 11px Orbitron;letter-spacing:.12em;animation:pg 3s infinite}
+.mis{list-style:none;margin:0;padding:0}.mis li{padding:12px 0 12px 34px;border-top:1px solid var(--l);position:relative;font-size:15px}.mis li::before{content:"";position:absolute;left:0;top:14px;width:18px;height:18px;border:2px solid var(--o);border-radius:50%;animation:pg 2.4s infinite}
+#pl{z-index:70}
+/* profilo */
+#pf{position:fixed;inset:0;z-index:60;background:#04030afa;overflow:auto;display:none;padding:calc(20px + env(safe-area-inset-top,0px)) 5vw 90px}#pf.on{display:block}body.pfo{overflow:hidden}
+.pfw{max-width:1100px;margin:auto}.pfh{display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin:26px 0}.pfh h3{margin:0;font:900 26px Orbitron}.pfh span{display:block;color:var(--m);font-size:14px}.pfh .st{display:inline-block;margin-top:6px}
+.av{width:96px;height:96px;border-radius:50%;border:2px solid var(--c);display:grid;place-items:center;overflow:hidden;cursor:pointer;font:900 36px Orbitron;box-shadow:0 0 30px #18f0ff55;position:relative;background:#0a0620;flex:none}.av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.drop{display:block;padding:46px 20px;text-align:center;border:2px dashed var(--c);border-radius:16px;cursor:pointer;background:#18f0ff0d;font:700 13px/1.8 Orbitron;letter-spacing:.15em;transition:.3s}.drop small{font:400 13px Inter;letter-spacing:0;color:var(--m)}.drop:hover,.drop.dv{background:#18f0ff22;box-shadow:0 0 40px #18f0ff44}
+.up{padding:10px 0;border-top:1px solid var(--l);font-size:13px}.trk audio{width:100%;margin-top:8px;height:34px}
+
+/* ===== FIX MOBILE + DESKTOP (solo aggiunte/correzioni, nulla rimosso) ===== */
+:root{--hh:92px}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+main,footer{overflow-x:clip}
+img,video,canvas,svg{max-width:100%}
+h1,h2,h3,h4,p,li,.trk,.up,.pfh span{overflow-wrap:break-word}
+.trk>div{min-width:0;overflow-wrap:anywhere}.up b{overflow-wrap:anywhere}
+section.s{scroll-margin-top:max(0px,calc(var(--hh) - 54px))}.ep,.cd{scroll-margin-top:max(0px,calc(var(--hh) - 24px))}
+header.top{padding-left:max(4vw,env(safe-area-inset-left,0px));padding-right:max(4vw,env(safe-area-inset-right,0px))}
+.tiles{padding:6px 4px;margin:-6px -4px;overscroll-behavior-x:contain}.tiles::-webkit-scrollbar,.chap::-webkit-scrollbar{display:none}
+#navp{max-width:170px;overflow:hidden;text-overflow:ellipsis}
+footer{padding-left:max(6vw,env(safe-area-inset-left,0px));padding-right:max(6vw,env(safe-area-inset-right,0px));padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
+/* griglie: mai piu larghe dello schermo */
+.grid{grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr))}
+.ent{grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))}
+.two{grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))}
+.shots{grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr))}
+.spec{grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr))}
+.lvs{grid-template-columns:repeat(auto-fit,minmax(min(215px,100%),1fr))}
+.nums{grid-template-columns:repeat(auto-fit,minmax(min(170px,100%),1fr))}
+.btn{max-width:100%;text-align:center;line-height:1.5}
+.badge{max-width:100%;border-radius:18px;line-height:1.5}
+/* pila 3D centrata a qualsiasi larghezza */
+.stack div{margin:0;transform:translate(-50%,-50%) rotateX(62deg) rotateZ(-35deg) translateZ(calc((var(--i) - 2)*var(--sp,40px)))}
+/* gallerie orizzontali */
+.chap{padding:30px 10px 14px;scroll-padding-inline:10px;overscroll-behavior-x:contain}
+.chap a img{-webkit-user-drag:none;user-select:none}
+@media(hover:hover) and (pointer:fine){.chap{scrollbar-width:thin;scrollbar-color:var(--c) #ffffff14;cursor:grab}.chap::-webkit-scrollbar{display:block;height:6px}.chap::-webkit-scrollbar-thumb{background:var(--c);border-radius:6px}.chap::-webkit-scrollbar-track{background:#ffffff14;border-radius:6px}}
+/* Safari iOS: blur con prefisso */
+.cdg div,.lvs div,.card,.box{-webkit-backdrop-filter:blur(8px)}#pl{-webkit-backdrop-filter:blur(12px)}
+.spec b,.nums b{background-clip:text}
+/* focus tastiera */
+.btn:focus-visible,.mini:focus-visible,.tabs button:focus-visible,.chap a:focus-visible,#lbx:focus-visible{outline:2px solid var(--c);outline-offset:3px}
+/* lightbox */
+#lb img{max-height:76vh;max-height:76dvh;max-width:100%;object-fit:contain}#lb p{bottom:calc(3vh + env(safe-area-inset-bottom,0px))}
+#lbx{position:absolute;top:max(12px,env(safe-area-inset-top,0px));right:max(12px,env(safe-area-inset-right,0px));width:44px;height:44px;border-radius:50%;border:1px solid #ffffff55;background:#0a0620cc;color:#fff;font:400 28px/1 Inter,sans-serif;cursor:pointer;display:grid;place-items:center;padding:0}
+/* profilo */
+#pf{overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-left:max(5vw,env(safe-area-inset-left,0px));padding-right:max(5vw,env(safe-area-inset-right,0px));padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))}
+/* header compatto su laptop, a colonna su tablet */
+@media(max-width:1380px){.tiles a{padding:7px 9px;letter-spacing:.12em}}
+@media(max-width:1180px){header.top{flex-direction:column;align-items:flex-start;gap:6px}.tiles{max-width:100%;width:calc(100% + 8px)}}
+/* hero verticale: foto intera, header misurato davvero */
+@media(max-aspect-ratio:4/3){.hero{height:auto;aspect-ratio:auto;min-height:56.25vw;margin-top:var(--hh)}.hero>img{position:relative;inset:auto;width:100%;height:auto;display:block;object-fit:contain}}
+/* telefoni */
+@media(max-width:820px){input,textarea,select{font-size:16px}}
+@media(max-width:600px){
+.cdg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.cdg div{min-width:0;padding:16px 4px}.cdg b{font-size:clamp(20px,7vw,72px)}.cdg small{font-size:10px;letter-spacing:.15em}
+.cd h2{font-size:clamp(20px,6vw,30px)}
+}
+@media(max-width:340px){.cdg{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){
+.card,.ent>div,.spec>div{padding:24px}.card{min-height:0}.ent>div{min-height:0}.spec>div{min-height:0}
+.box{padding:20px}.lvs>div{min-height:200px;padding:20px}.lvs b{font-size:54px}
+.spec b{font-size:clamp(18px,6.2vw,30px)}
+.btn{padding:14px 22px;letter-spacing:.15em}
+.hero .hb{right:5vw;bottom:14px}
+.stack{height:300px}
+.pfh h3{font-size:22px}
+}
+/* touch: bersagli da 44px, nessun hover "appiccicoso" */
+@media(pointer:coarse){
+.tiles a{padding:11px 14px}.mini{min-height:40px;padding:8px 14px}.tabs button{min-height:44px}#pp{width:44px;height:44px}
+input,textarea,select{min-height:44px}textarea{min-height:90px}
+}
+@media(hover:none){.lvs div:hover,.card:hover,.ent>div:hover,.chap a:hover,.shots img:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style></head><body class="lock">
+
+<div id="intro"><video id="iv" muted playsinline autoplay preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload noremoteplayback" src="https://raw.githubusercontent.com/ryzn-eu/THE-Last-Of-Moichan-Demo/main/2.mp4"></video><button id="go" type="button">TOCCA PER AVVIARE</button></div>
+<canvas id="fx"></canvas><div class="aur"></div>
+<header class="top"><div class="logo">HORIZON<span>◆</span>GAMES</div><nav class="tiles"><a href="#dominion">Dominion</a><a href="#mondo">Il Mondo</a><a href="#capitoli">Galleria</a><a href="#moichan">The Last Moichan</a><a href="#ryzn">Ryzn Engine</a><a href="#studio">Studio</a><a href="#gruppo">Gruppo</a><a href="#suono">Suono</a><a href="#auramg">Aura MG</a><a href="#profilo" id="navp">Profilo</a></nav></header>
+
+<main>
+<section class="hero" id="top"><img id="promo" fetchpriority="high" decoding="async" alt="Dominion" src="https://raw.githubusercontent.com/ryzn-eu/Ryzn-Games-Studios-Frontpage/main/file_0000000092d081f491cf630f3990cb8b.png"><div class="glow"></div><div class="hb">25·08·2027<small>Lancio internazionale</small></div><div class="sc">SCORRI<i></i></div></section>
+
+<section class="cd" id="countdown"><span class="tag">Lancio internazionale</span><h2>25 agosto 2027 · ore 12:00</h2>
+<div class="cdg" role="timer" aria-live="off"><div><b id="cd-d">--</b><small>Giorni</small></div><div><b id="cd-h">--</b><small>Ore</small></div><div><b id="cd-m">--</b><small>Minuti</small></div><div><b id="cd-s">--</b><small>Secondi</small></div></div>
+<p>Orario italiano (CEST).</p></section>
+
+<div class="mq"><span>DOMINION ◆ DALLA STRADA AL CONTINENTE ◆ 25 AGOSTO 2027 ◆ RYZN ENGINE 8K ◆ THE LAST MOICHAN ◆ GRUPPO HORIZON ◆ NESSUNA CARRIERA, SOLO SCELTE ◆ DOMINION ◆ DALLA STRADA AL CONTINENTE ◆ 25 AGOSTO 2027 ◆ RYZN ENGINE 8K ◆ THE LAST MOICHAN ◆ GRUPPO HORIZON ◆ NESSUNA CARRIERA, SOLO SCELTE ◆</span></div>
+
+<section class="s" id="numeri" style="padding-bottom:0"><div class="nums r"><div><b data-n="13">0</b><small>Scene di gioco</small></div><div><b data-n="7">0</b><small>Livelli di dominio</small></div><div><b data-n="18">0</b><small>Soundtrack</small></div><div><b data-n="3">0</b><small>Sedi</small></div><div><b data-n="8" data-s="K">0</b><small>Ryzn Engine</small></div></div></section>
+<section class="s" id="dominion"><span class="tag r">Il gioco</span><h2 class="r">Nessuna carriera.<br><em>Solo scelte.</em></h2>
+<p class="p r">Dominion è un open world dove i governi mondiali si sgretolano. Parti da una zona di strada e, giocando, conquisti un quartiere, poi quattro, una città, una provincia, una nazione, un continente. Le meccaniche sono imprevedibili e la storia cambia in base alle azioni che compi. Con gli NPC puoi stringere legami, amicizie, perfino relazioni: dipende dal tipo di partita che giochi. Libertà alla GTA, intensità alla Call of Duty, scelte alla Fallout, caos alla Anarchy.</p>
+<div class="lvs r" id="lv"></div><div class="grid r" id="dg"></div></section>
+<section class="s" id="mondo"><span class="tag r">Il mondo reagisce</span><h2 class="r">Ogni regime ha<br><em>un punto di rottura.</em></h2>
+<p class="p r">Nelle schermate di gioco il pianeta è diviso in zone: rosso per i regimi ostili, verde per le alleanze, grigio per chi non ha ancora scelto. Ogni regione ha una percentuale di fragilità o di stabilità, risorse da gestire (energia, cibo, denaro) e le mosse per cambiarla: inviare truppe, sabotare, fare diplomazia, fare propaganda.</p>
+<div class="two r"><div class="box"><div class="radar"><b style="--x:22%;--y:30%;--k:#ff3d5a"></b><b style="--x:60%;--y:22%;--k:#ff3d5a"></b><b style="--x:70%;--y:58%;--k:#2dffb0"></b><b style="--x:36%;--y:66%;--k:#2dffb0"></b><b style="--x:48%;--y:46%;--k:#18f0ff"></b><b style="--x:80%;--y:36%;--k:#8a85a8"></b></div></div>
+<div class="box"><h3>Stagione 4 · situazione globale</h3><p>Il quadro è instabile: tre aree su dieci sono già in rivolta.</p>
+<div class="mt rd">Zona Nord · regime ostile<span>89%</span></div><span class="bar" style="margin:-10px 0 18px"><i style="--w:89%;background:linear-gradient(90deg,#ff6b8a,#ff2b4d)"></i></span>
+<div class="mt rd">Regime del Nord · fragilità<span>81%</span></div><span class="bar" style="margin:-10px 0 18px"><i style="--w:81%;background:linear-gradient(90deg,#ff6b8a,#ff2b4d)"></i></span>
+<div class="mt gr">Zona Sud · alleanza locale<span>72%</span></div><span class="bar" style="margin:-10px 0 18px"><i style="--w:72%;background:linear-gradient(90deg,var(--g),var(--c))"></i></span>
+<div class="mt gr">Comune del Sud · stabile<span>34%</span></div><span class="bar" style="margin:-10px 0 4px"><i style="--w:34%;background:linear-gradient(90deg,var(--g),var(--c))"></i></span>
+<div class="don" style="background:conic-gradient(#ff3d5a 0 47%,#2dffb0 0 85%,#8a85a8 0 100%)"></div>
+<div class="mt" style="text-align:center">47% rivolta · 38% alleate · 15% neutrali</div>
+<div class="chips"><span>Invia truppe</span><span>Sabotaggio</span><span>Diplomazia</span><span>Propaganda</span><span>Armi</span><span>Fame</span></div></div></div></section>
+
+<section class="s" id="capitoli" style="padding-bottom:0"><span class="tag r">Seleziona capitolo</span><h2 class="r">13 scene.<br><em>Un mondo.</em></h2><div class="chap r" id="chap"></div></section>
+<div id="eps"></div>
+
+<section class="s" id="moichan" style="padding-bottom:0"><span class="tag r">In sviluppo</span><h2 class="r">The Last <em>Moichan</em></h2>
+<p class="r"><span class="badge">DEMO · IN SVILUPPO · RYZN ENGINE 8K SPERIMENTALE</span></p>
+<p class="p r">The Last Moichan è ambientato durante la colonizzazione delle Americhe e segue la storia dell’ultimo Moichano. Il gioco si ispira al film The Last of the Mohicans: un popolo che scompare, un territorio conteso da imperi stranieri e un uomo che porta da solo il peso di tutto ciò che resta. Dalle schermate si vede un’avventura in terza persona tra foreste, cascate e forti assediati, con arco, tomahawk e trappole.</p>
+<div class="lvs r" id="molv"></div>
+<span class="tag r" style="display:block;margin-top:50px">Seleziona scena</span><div class="chap r" id="mochap"></div></section>
+<div id="moeps"></div>
+<section class="s" id="moextra" style="padding-top:20px"><div class="two r"><div class="box"><span class="badge">MISSIONE · ASSALTO AL FORTE FRANCESE</span><h3 style="margin-top:14px">Obiettivi in corso</h3><ul class="mis"><li>Raggiungi la torre di avvistamento</li><li>Elimina gli ufficiali francesi (0/3)</li><li>Distruggi le scorte di polvere da sparo (0/2)</li></ul></div>
+<div class="box"><h3>Comandi</h3><p>Il HUD è pensato per due modi di giocare, e mostra già entrambi.</p><div class="chips"><span>Joystick touch</span><span>Attacco leggero</span><span>Attacco pesante</span><span>Salto</span><span>Schivata</span><span>Minimappa e bussola</span></div></div></div>
+<div class="grid r" id="mg"></div></section>
+
+<section class="s" id="ryzn"><span class="tag r">Tecnologia proprietaria</span><h2 class="r">Ryzn <em>Engine</em></h2>
+<p class="p r">Il motore non calcola 8K: lo fa percepire. La scena viene resa in strati SD semitrasparenti, sovrapposti con micro-spostamenti sub-pixel. Quando il segnale arriva all’occhio, il Perceptual Compositor agisce come una scheda grafica sulla percezione e ricompone il dettaglio regolando contrasto, fase e bordo. Il risultato è un’immagine vissuta in 8K con una frazione del carico di un rendering nativo.</p>
+<div class="stack r" id="stack"><div style="--i:0"></div><div style="--i:1"></div><div style="--i:2"></div><div style="--i:3"></div><div style="--i:4"></div></div>
+<div class="spec r"><div><b>7680×4320</b>OUTPUT PERCEPITO · TARGET</div><div><b>4–9</b>STRATI SD ADATTIVI</div><div><b>PERCEPTUAL</b>COMPOSITOR · COMPUTE SHADER</div><div><b>TILE LOD</b>STRADA → CONTINENTE</div></div></section>
+
+<section class="s" id="studio"><span class="tag r">Lo studio</span><h2 class="r">Tre sedi.<br><em>Un progetto.</em></h2>
+<p class="p r">Horizon Games Studio’s sviluppa, pubblica e suona i propri giochi. Il lavoro è diviso in tre sedi, due in provincia di Brescia e una in Romania.</p>
+<div class="ent r">
+<div><small>STUDIO · ITALIA</small><h3>Alfianello</h3><p>25050 Alfianello (Brescia). Sede dello studio di sviluppo di Horizon Games Studio’s.</p></div>
+<div><small>DIVISIONE SOFTWARE · ITALIA</small><h3>San Gervasio Bresciano</h3><p>25020 San Gervasio Bresciano (Brescia). Divisione software: tecnologia, strumenti e piattaforme alla base di Dominion e Ryzn Engine.</p></div>
+<div><small>HORIZON GAMES PUBLISHING · ROMANIA</small><h3>Stănești</h3><p>Divisione editoriale per la pubblicazione internazionale dei giochi. A Stănești hanno sede S.Brotto Holding e la sede centrale di S.B. Horizon.</p></div>
+</div></section>
+
+<section class="s" id="gruppo"><span class="tag r">Il Gruppo</span><h2 class="r">Gruppo <em>Horizon</em></h2>
+<p class="p r">Horizon Games Studio’s fa parte del Gruppo Horizon, che fa capo alla S.Brotto-Holding. Sviluppo, tecnologia, servizi e musica nella stessa struttura.</p>
+<p class="root r">S.BROTTO-HOLDING → GRUPPO HORIZON</p>
+<div class="ent r"><div><h3>Servizi Horizon</h3><small>servizihorizon.it</small></div><div><h3>WD Global Horizon</h3><small>wd-globalhorizon.it</small></div><div><h3>PL Global Aura</h3><small>pl-globalaura.it</small></div><div><h3>Aura MG</h3><small>MUSIC GROUP</small><p>Produzione musicale e artisti. Sviluppa le 18 soundtrack di Dominion.</p></div><div><h3>S.B. Horizon</h3><small>CASA DISCOGRAFICA</small><p>Soundtrack, voci e suoni di Dominion.</p></div><div><h3>DevLab Horizon</h3><small>SVILUPPO</small><p>Dominion e Ryzn Engine, con Horizon Games Studio’s.</p></div><div><h3>Horizon Games Publishing</h3><small>ROMANIA · STĂNEȘTI</small><p>Pubblicazione internazionale dei giochi del gruppo.</p></div></div></section>
+
+<section class="s" id="suono"><span class="tag r">Suono</span><h2 class="r">Ogni zona <em>ha una voce</em></h2><p class="p r">Soundtrack, voci e sound design nascono in casa da S.B. Horizon: dalla strada al continente, il suono cambia con il tuo potere. Il brano che ascolti ora è la soundtrack ufficiale di lancio di Dominion.</p><div class="wave r" id="wave"></div></section>
+
+<section class="s" id="auramg"><span class="tag r">Aura MG · Music Group</span><h2 class="r">Suona in <em>Dominion</em></h2>
+<p class="p r">Stiamo cercando artisti per le 18 soundtrack di Dominion. Invia la richiesta di partecipazione, poi apri la tua pagina profilo: lì crei l’account artista, completi la scheda e carichi i brani, che partono da soli appena li scegli.</p>
+<div class="lvs r" id="steps"></div>
+<div class="two r"><div class="box"><h3>Richiesta di partecipazione</h3><p>Raccontaci chi sei e che musica fai.</p>
+<form id="fa" novalidate><label for="a1">Nome d’arte</label><input id="a1" required maxlength="80"><label for="a2">Email</label><input id="a2" type="email" required maxlength="120" autocomplete="email" inputmode="email"><label for="a3">Genere</label><input id="a3" maxlength="80" placeholder="Synthwave, orchestrale, hip hop…"><label for="a4">Link a un tuo lavoro</label><input id="a4" type="url" maxlength="300" placeholder="https://"><label for="a5">Messaggio</label><textarea id="a5" maxlength="1200"></textarea><button class="btn pk" type="submit">Invia richiesta</button><div class="msg" id="am" aria-live="polite"></div></form></div>
+<div class="box"><h3>La tua pagina profilo</h3><p>Stesso account di LandraFashion e degli altri servizi Horizon: se ce l’hai già, accedi e basta.</p><div class="wave r" id="wave2" style="height:90px;margin:20px 0"></div><a class="btn" href="#profilo">Apri il profilo artista</a></div></div></section>
+</main>
+<footer><span>© 2026 Horizon Games Studio’s</span><span>Alfianello (BS) · San Gervasio Bresciano (BS) · Stănești (RO)</span><span>Gruppo Horizon · S.Brotto-Holding</span></footer>
+<div id="pf"><div class="pfw"><button class="mini" id="pfx" type="button">← Torna al sito</button><div style="margin-top:26px"><span class="tag">Aura MG · Area artista</span><h2 style="font-size:clamp(34px,6vw,70px)">Il tuo <em>profilo</em></h2></div>
+<div class="box" id="pf-out" style="max-width:480px"><div class="tabs"><button type="button" class="on" data-t="in">Accedi</button><button type="button" data-t="up">Registrati</button></div>
+<form id="fl" novalidate><div id="nm-w" class="hid"><label for="l0">Nome d’arte</label><input id="l0" maxlength="80"></div><label for="l1">Email</label><input id="l1" type="email" autocomplete="email" required><label for="l2">Password</label><input id="l2" type="password" autocomplete="current-password" minlength="6" required>
+<label id="gd-w" class="hid" style="text-transform:none;letter-spacing:0;font:400 13px Inter"><input id="gd" type="checkbox" style="width:auto"> Accetto il trattamento dati GDPR Horizon Datacenter.</label>
+<button class="btn" type="submit" id="lb-go">Accedi</button><div class="msg" id="lm" aria-live="polite"></div></form></div>
+<div id="pf-in" class="hid"><div class="pfh"><label class="av" title="Cambia foto"><img id="avi" alt="" hidden><span id="avl">?</span><input type="file" id="avf" accept="image/*" hidden></label><div><h3 id="ar-n"></h3><span id="ar-e"></span><span class="st in_revisione" id="tier"></span></div><button class="mini" id="lo" type="button" style="margin-left:auto">Esci</button></div>
+<div class="nums" style="margin-bottom:24px"><div><b id="s1">0</b><small>Brani caricati</small></div><div><b id="s2">0</b><small>Approvati</small></div><div><b id="s3">0</b><small>Nel gioco</small></div></div>
+<div class="two"><div class="box"><h3>Scheda artista</h3><form id="fp" novalidate><label for="p1">Nome d’arte</label><input id="p1" maxlength="80"><label for="p2">Genere</label><input id="p2" maxlength="80"><label for="p3">Link a un tuo lavoro</label><input id="p3" type="url" maxlength="300" placeholder="https://"><label for="p4">Bio</label><textarea id="p4" maxlength="600"></textarea><button class="btn" type="submit">Salva profilo</button><div class="msg" id="pm" aria-live="polite"></div></form></div>
+<div class="box"><h3>Carica brani</h3><p>Scegli uno o più file: il caricamento parte da solo su Cloudinary e il brano entra in revisione.</p><label class="drop" id="dz">Trascina qui i brani o tocca per scegliere<br><small>mp3, wav, flac · max 100 MB · caricamento automatico</small><input id="u4" type="file" accept="audio/*" multiple hidden></label><label for="u3">Note per il team (opzionale)</label><textarea id="u3" maxlength="600"></textarea><div id="uq"></div></div></div>
+<h3 style="margin-top:30px">I tuoi brani</h3><div id="tl"></div></div></div></div>
+<div id="lb"><button id="lbx" type="button" aria-label="Chiudi">×</button><img alt=""><p></p></div>
+
+<div id="pl" role="group" aria-label="Soundtrack Dominion"><img alt="" src="https://raw.githubusercontent.com/ryzn-eu/THE-Last-Of-Moichan-Demo/main/Screenshot/1795714738719.jpg"><div><b>Dominion</b><span>Soundtrack ufficiale di lancio</span></div><button id="pp" type="button" aria-label="Avvia soundtrack"><svg class="b" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg><svg class="a" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button></div>
+
+<script>
+(function(){
+var API='https://api.github.com/repos/ryzn-eu/Ryzn-Games-Studios-Frontpage/contents/Screenshot';
+var MO='https://raw.githubusercontent.com/ryzn-eu/THE-Last-Of-Moichan-Demo/main/Screenshot/';
+var SONG='https://raw.githubusercontent.com/ryzn-eu/Ryzn-Games-Studios-Frontpage/main/DOMINION%20SOUNDTRACK.mp3';
+var D=[["Santos, di notte","Santos è la prima città che il gioco ti mette davanti: una baia illuminata, una ruota panoramica sul lungomare, colline sullo sfondo e un elicottero che sorvola i tetti. In alto il HUD tiene il conto di tempo, denaro e livello di ricercato (tre stelle), in basso c’è il menu rapido.","Esplora la città"],["Porto di Santos","Gru, container e una nave all’ormeggio sotto un tramonto rosso. Qui la fragilità del regime è al 62% e una voce in circolo racconta che il ladro del porto ha rubato ai ricchi: la tua fama si muove da sola. L’incarico del momento è svuotare il magazzino 7.","Missione · Porto"],["Base operativa","Il rifugio del protagonista: attico di lusso con vista sullo skyline, schermo gigante con la mappa del mondo e il simbolo dell’aquila alla parete. Da qui controlli monete (42.750), seguaci (3,2 milioni) ed energia (87%) e passi alle missioni.","Livello 2"],["Inseguimento","Una berlina nera sotto la pioggia, inseguita dalle volanti e da un elicottero con il riflettore. Il tachimetro segna 187 km/h, mancano 2,3 km alla meta e l’indicatore di ricercato è a tre stelle. La minimappa mostra le pattuglie in rosso.","Fuggi dalla polizia"],["La fuga verso il ponte","Stessa notte, altra missione: raggiungere il ponte prima che la polizia chiuda il cerchio. Cronometro, minimappa verde e barra di energia accompagnano la corsa a 142 km/h tra asfalto bagnato e neon.","Fuga"],["Aeroporto di Santos","L’obiettivo è raggiungere il velivolo fermo in pista: 320 metri, 12 secondi di timer e una pista illuminata a giorno. Il protagonista ha il fucile in pugno (30 colpi nel caricatore, 90 di riserva) e la bussola indica la scaletta.","Missione · Aeroporto"],["Il cecchino","Dal tetto di un edificio, il bersaglio è il capo della gang a 847 metri. Fucile di precisione con 5 colpi in canna, 20 di scorta, un elicottero che pattuglia e uno stendardo rosso con l’aquila sul covo nemico.","Elimina il capo"],["Missione completata","Operazione Zona Nord: capo della gang eliminato e territorio liberato. Il riepilogo assegna 8.750 $, 2.340 XP e una nuova arma sbloccata, con un baule con l’aquila che si apre tra luci verdi.","Ricompense"],["Controllo del territorio","Una mappa aerea divisa a zone: la Zona Nord è un regime ostile con fragilità all’89%, la Zona Sud è un’alleanza locale con stabilità al 72%. Energia, cibo e denaro vengono dalle regioni che controlli; per cambiare gli equilibri usi truppe, sabotaggio, diplomazia o propaganda.","Mappa strategica"],["Mappa del pianeta","Il gioco allarga lo sguardo all’intero globo, Stagione 4. Il Regime del Nord è fragile all’81%, il Comune del Sud stabile al 34%; il 47% delle aree è in rivolta, il 38% alleato, il 15% neutrale. Gli eventi globali scorrono a lato e la situazione complessiva è segnata come instabile.","Livello globale"],["Inventario","Lv. 24, XP 12.450 su 24.000. La griglia raccoglie armi, giubbotti, casco, kit medici, granate e fumogeni. Il fucile d’assalto M4 ha danno 85, cadenza 750, precisione 92 e caricatore da 30. In basso salute 100%, corazza 85%, energia 72%.","Equipaggiamento"],["Scala del potere","«Da vicolo a continente»: cinque tappe in sequenza. Si parte come Ladro, poi una banda di 12 uomini (12.000), una città di 4 quartieri (250.000), un esercito su 3 regioni (2.500.000) e infine il continente (25.000.000). La tua influenza globale è all’1,2%.","Stagione 4"],["Il kit dell’interfaccia","Una tavola riassume tutto il linguaggio visivo del gioco: HUD da inseguimento, mirino da cecchino, inventario, controllo del territorio, schermata di missione completata, vista sulla città e base operativa. Verde acido per ciò che è tuo, rosso per il pericolo.","Design"]];
+var $=function(i){return document.getElementById(i)};
+var eps=$('eps'),chap=$('chap'),lb=$('lb'),urls=[];
+D.forEach(function(d,i){var n=('0'+(i+1)).slice(-2);
+ eps.insertAdjacentHTML('beforeend','<section class="ep" id="e'+i+'"><div class="fr" data-i="'+i+'"><span class="n">SCENA '+n+'</span><img alt="'+d[0]+'" loading="lazy"></div><div class="tx"><div class="num">'+n+'</div><small>'+d[2]+'</small><h3>'+d[0]+'</h3><p>'+d[1]+'</p></div></section>');
+ chap.insertAdjacentHTML('beforeend','<a href="#e'+i+'"><img alt="" loading="lazy" decoding="async"><span>'+n+' · '+d[0]+'</span></a>')});
+function setImgs(){document.querySelectorAll('.fr img,.chap a img').forEach(function(im){var i=im.closest('.fr')?+im.closest('.fr').dataset.i:[].indexOf.call(chap.children,im.parentNode);if(urls[i]){im.src=urls[i];im.onerror=function(){im.style.display='none'}}})}
+var DB='https://raw.githubusercontent.com/ryzn-eu/Ryzn-Games-Studios-Frontpage/main/Screenshot/',FN=['file_00000000043481f4816c08f7ae541d23.png','file_000000001e1881f4b35949a1133efd0e.png','file_000000001ec481f4984d3e1eb1c735d2.png','file_00000000237881f4ac0db86db46d2be0.png','file_0000000033fc81f4a5f319884ebbc97f.png','file_0000000049e481f4827a4914ebed144b.png','file_000000004a108210b1e21ae0486d5c72.png','file_00000000654881f4a9a0f4b1770a7317.png','file_00000000839081f481e18517173882a8.png','file_0000000093ac81f4988a0024a4581948.png','file_00000000990c8210899b431e0a5a867e.png','file_00000000a1d48210becd65ca53e600e0.png','file_00000000a3fc81f4b4c9d3f81d7087fa.png'],OR=[8,12,3,1,2,6,7,5,9,10,11,13,4];
+urls=OR.map(function(n){return DB+FN[n-1]});setImgs();
+/* The Last Moichan: stessa struttura di Dominion */
+var MS=[["Il forte in fiamme","Copertina del gioco. In primo piano un guerriero Moichano a terra, con pittura di guerra, piume e tomahawk, mentre la palizzata di un forte francese brucia sotto il fuoco dei cannoni. Una bandiera con i gigli sventola sul fumo, i soldati in tricorno caricano i fucili e sullo sfondo restano il lago e le montagne innevate.","Copertina"],["L’assalto al forte","Il fiume, la cascata e la torre di avvistamento con la bandiera francese. Il HUD mostra la missione «Assalto al forte francese»: raggiungere la torre ed eliminare tre ufficiali. Bussola a 184 m, +125 XP, tomahawk in mano e a destra la barra dell’equipaggiamento con i comandi touch.","Missione"],["Sul crinale","Dal bosco si vede tutta la battaglia: il forte, le navi nella baia, il fumo dei cannoni. Obiettivo a 286 m, Livello 18 e un terzo incarico, distruggere le scorte di polvere da sparo. Minimappa, joystick e suggerimenti da controller per attacco leggero, pesante, salto e schivata.","Controlli"],["L’ultimo sguardo","Il Moichano osserva in silenzio, con l’arco sulla schiena, la flotta all’ancora davanti al forte. Obiettivo a 312 m. È la scena più raccolta del gioco: un uomo solo di fronte a un impero che avanza.","Narrazione"]];
+var MU=[MO+'1.png',MO+'file_0000000006f48211b283e2feb26d575f.png',MO+'file_0000000060c88211b617e5c70da79799.png',MO+'file_00000000ca548211b2d62867ef1d970b.png'],mo=$('moeps'),mc=$('mochap');
+MS.forEach(function(d,i){var n='0'+(i+1);mo.insertAdjacentHTML('beforeend','<section class="ep" id="m'+i+'"><div class="fr" data-m="'+i+'"><span class="n">SCENA '+n+'</span><img alt="'+d[0]+'" loading="lazy" src="'+MU[i]+'"></div><div class="tx"><div class="num">'+n+'</div><small>'+d[2]+'</small><h3>'+d[0]+'</h3><p>'+d[1]+'</p></div></section>');mc.insertAdjacentHTML('beforeend','<a href="#m'+i+'"><img alt="" loading="lazy" decoding="async" src="'+MU[i]+'"><span>'+n+' · '+d[0]+'</span></a>')});
+mo.addEventListener('click',function(e){var f=e.target.closest('.fr');if(f){var i=+f.dataset.m;show(MU[i],'0'+(i+1)+' · '+MS[i][0])}});
+function lv(el,a){el.innerHTML=a.map(function(x){return '<div><b>'+x[0]+'</b><h4>'+x[1]+'</h4>'+x[2]+'<span class="bar"><i style="--w:'+x[3]+'%"></i></span></div>'}).join('')}
+function cds(el,a){el.innerHTML=a.map(function(x){return '<div class="card"><div class="gl">'+x[0]+'</div><small>'+x[1]+'</small><h3>'+x[2]+'</h3><p>'+x[3]+'</p><ul>'+x[4].map(function(l){return '<li>'+l+'</li>'}).join('')+'</ul></div>'}).join('')}
+lv($('lv'),[["01","Strada","Ladro: si parte da un vicolo, senza alleati.",14],["02","Quartiere","Il primo territorio sotto il tuo controllo.",28],["03","4 Quartieri","Una banda di 12 uomini per tenere le strade.",43],["04","Città","Polizia, economia e bande reagiscono al tuo potere.",57],["05","Provincia","Un esercito su 3 regioni, 2.500.000 di influenza.",71],["06","Nazione","Un governo cade: prendi il suo posto.",86],["07","Continente","25.000.000 di influenza per unificarlo.",100]]);
+lv($('molv'),[["18","Livello","Progressione con XP a ogni azione (+125 XP).",60],["12","Frecce","Arco lungo: l’arma silenziosa dall’ombra.",80],["03","Tomahawk","Corpo a corpo e lancio.",40],["02","Pozioni","Cura sul campo, poche e preziose.",25],["01","Trappola","Trappola esplosiva per fermare l’avanzata.",15]]);
+lv($('steps'),[["01","Candidati","Invia nome d’arte, genere e un link al tuo lavoro.",25],["02","Crea il profilo","Account artista sul database Horizon.",50],["03","Carica","Scegli i file: l’upload parte da solo.",75],["04","Segui lo stato","In revisione, approvato, integrato nel gioco.",100]]);
+cds($('dg'),[["🌍","Mondo aperto","Dalla strada al continente","Santos è solo l’inizio: baia, porto, aeroporto, quartieri e un pianeta intero da leggere in tempo reale.",["Mappa della città e mappa del pianeta","Stagione 4 con eventi globali","Zone alleate, neutrali e in rivolta"]],["📖","Storia dinamica","La trama dipende da te","Meccaniche imprevedibili: ogni missione sposta la fragilità dei regimi e la storia segue le tue azioni, fino al caos dell’anarchia.",["Voci in circolo che nascono dalle tue azioni","Ricompense, XP e armi sbloccate","Nessuna partita è uguale a un’altra"]],["🤝","NPC","Legami che restano","Amicizie, lealtà e relazioni nascono in base al tipo di partita che scegli di giocare.",["Seguaci: 2,4 milioni nella schermata","Alleanze locali nelle zone sud","Fazioni rivali da proteggere o sfruttare"]],["🎯","Combattimento","Intensità da sparatutto","Quando la diplomazia finisce, resta lo scontro, dentro un mondo che reagisce a ogni mossa.",["Fucile d’assalto M4: danno 85, precisione 92","Cecchino con bersagli a 847 metri","Granate, kit medici e corazza"]],["🚓","Inseguimenti","Polizia, elicotteri, ricercato","Fuggi tra asfalto bagnato e neon con le volanti alle spalle e il riflettore dall’alto.",["Auto fino a 187 km/h","Livello di ricercato a stelle","Minimappa con le pattuglie"]],["🎧","Suono","18 soundtrack","Ogni zona ha la sua voce, con colonna sonora sviluppata insieme ad Aura MG e agli artisti della community.",["Brani caricati dagli artisti","Revisione del team Aura MG","Integrazione direttamente nel gioco"]]]);
+cds($('mg'),[["🏹","Ambientazione","Colonizzazione delle Americhe","Frontiera, foreste e forti: il Nuovo Mondo nel momento in cui due civiltà si scontrano.",["Cascate, fiumi e montagne innevate","Forti francesi e navi nella baia","Battaglie con cannoni e moschetti"]],["🪶","Protagonista","L’ultimo Moichano","La storia segue un solo uomo e il destino del suo popolo.",["Pittura di guerra e piume","Arco lungo e tomahawk","Cure e trappole sul campo"]],["🎬","Ispirazione","The Last of the Mohicans","Il film è la base narrativa su cui il gioco costruisce la sua storia.",["Un popolo che scompare","Imperi stranieri in guerra","Il peso di ciò che resta"]],["⚙️","Tecnologia","Ryzn Engine 8K","Il gioco gira sul motore proprietario in versione sperimentale, come indica il marchio sulla copertina.",["Resa 8K percepita","Compositor percettivo","Demo in sviluppo"]]]);
+var w2=$('wave2');for(var q=0;q<60;q++){var e2=document.createElement('i');e2.style.animationDelay=(q*.043%1.3)+'s';e2.style.animationDuration=(.5+(q*37%11)/9)+'s';w2.appendChild(e2)}
+document.addEventListener('pointermove',function(e){if(e.pointerType==='touch')return;var t=e.target.closest&&e.target.closest('.card,.lvs>div,.ent>div,.spec>div,.nums>div');if(!t)return;var r=t.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;t.style.setProperty('--mx',x+'px');t.style.setProperty('--my',y+'px');t.style.transform='perspective(800px) rotateX('+((y/r.height-.5)*-6)+'deg) rotateY('+((x/r.width-.5)*6)+'deg) translateY(-6px)'});
+document.addEventListener('pointerout',function(e){var t=e.target.closest&&e.target.closest('.card,.lvs>div,.ent>div,.spec>div,.nums>div');if(t)t.style.transform=''});
+var cio=new IntersectionObserver(function(a){a.forEach(function(x){if(!x.isIntersecting)return;cio.unobserve(x.target);var b=x.target,N=+b.dataset.n,t0=performance.now();(function f(t){var k=Math.min(1,(t-t0)/1600);b.textContent=Math.round(N*(1-Math.pow(1-k,3)))+(b.dataset.s||'');if(k<1)requestAnimationFrame(f)})(t0)})},{threshold:.4});
+document.querySelectorAll('[data-n]').forEach(function(b){cio.observe(b)});
+/* lightbox */
+function show(src,cap){lb.querySelector('img').src=src;lb.querySelector('p').textContent=cap||'';lb.classList.add('on')}
+var cur=0;function open(i){cur=(i+D.length)%D.length;show(urls[cur]||'',('0'+(cur+1)).slice(-2)+' · '+D[cur][0])}
+eps.addEventListener('click',function(e){var f=e.target.closest('.fr');if(f)open(+f.dataset.i)});
+lb.onclick=function(e){if(e.target.tagName!=='IMG')lb.classList.remove('on')};
+addEventListener('keydown',function(e){if(e.key==='Escape')lb.classList.remove('on')});
+/* intro: non saltabile, senza barra; al termine parte la soundtrack */
+var vid=$('iv'),intro=$('intro'),go=$('go'),done=false;
+var au=new Audio(SONG);au.loop=true;au.preload='auto';var pl=$('pl'),pp=$('pp'),userStopped=false;
+function sync(){var on=!au.paused;pl.classList.toggle('play',on);pp.setAttribute('aria-label',on?'Metti in pausa la soundtrack':'Avvia soundtrack')}
+au.addEventListener('play',sync);au.addEventListener('pause',sync);
+function playSong(){var p=au.play();if(p&&p.catch)p.catch(function(){})}
+pp.onclick=function(){if(au.paused){userStopped=false;playSong()}else{userStopped=true;au.pause()}};
+function arm(){var E=['pointerdown','keydown','touchstart','click','wheel','scroll'],f=function(){if(au.paused&&!userStopped)playSong();if(!au.paused)E.forEach(function(t){removeEventListener(t,f,true)})};E.forEach(function(t){addEventListener(t,f,{capture:true,passive:true})})}
+function end(){if(done)return;done=true;intro.classList.add('off');document.body.classList.remove('lock');pl.classList.add('on');try{vid.pause()}catch(e){}playSong();arm();setTimeout(function(){intro.remove()},1400)}
+vid.addEventListener('ended',end);pl.classList.add('on');playSong();arm();au.addEventListener('canplay',function(){if(au.paused&&!userStopped)playSong()});
+vid.addEventListener('error',end); /* solo se il file non si carica, per non bloccare il sito */
+var pr=vid.play();if(pr&&pr.catch)pr.catch(function(){go.classList.add('on')});
+go.onclick=function(){go.classList.remove('on');playSong();var q=vid.play();if(q&&q.catch)q.catch(end)};
+/* countdown: 25/08/2027 12:00 ora italiana (CEST = UTC+2) */
+var T=Date.UTC(2027,7,25,10,0,0),cd={d:$('cd-d'),h:$('cd-h'),m:$('cd-m'),s:$('cd-s')};
+function tick(){var s=Math.max(0,Math.floor((T-Date.now())/1000)),d=Math.floor(s/86400);cd.d.textContent=d;cd.h.textContent=('0'+Math.floor(s%86400/3600)).slice(-2);cd.m.textContent=('0'+Math.floor(s%3600/60)).slice(-2);cd.s.textContent=('0'+s%60).slice(-2)}
+tick();setInterval(tick,1000);
+/* reveal */
+var rv=document.querySelectorAll('.r,.ep');
+if('IntersectionObserver' in window){var io=new IntersectionObserver(function(a){a.forEach(function(x){if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target)}})},{threshold:0,rootMargin:'0px 0px -6% 0px'});rv.forEach(function(x){io.observe(x)})}else rv.forEach(function(x){x.classList.add('on')});
+var w=$('wave');for(var i=0;i<100;i++){var e=document.createElement('i');e.style.animationDelay=(i*.043%1.3)+'s';e.style.animationDuration=(.5+(i*37%11)/9)+'s';w.appendChild(e)}
+var st=$('stack');
+var cv=$('fx'),cx=cv.getContext('2d'),W,H,P=[];var DPR=Math.min(2,window.devicePixelRatio||1);function rs(){W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;cx.setTransform(DPR,0,0,DPR,0,0)}rs();addEventListener('resize',rs);
+for(var i=0;i<90;i++)P.push({x:Math.random(),y:Math.random(),v:.002+Math.random()*.004,l:10+Math.random()*30,c:Math.random()<.5?'#18f0ff':'#ff2bd6'});
+(function f(){cx.clearRect(0,0,W,H);P.forEach(function(p){p.y+=p.v;if(p.y>1.05){p.y=-.05;p.x=Math.random()}cx.strokeStyle=p.c;cx.globalAlpha=.35;cx.lineWidth=1;cx.beginPath();cx.moveTo(p.x*W,p.y*H);cx.lineTo(p.x*W-p.l*.2,p.y*H-p.l);cx.stroke()});
+if(st){var r=st.getBoundingClientRect(),k=1-Math.min(1,Math.abs(r.top+r.height/2-innerHeight/2)/(innerHeight*.6));st.style.setProperty('--sp',(10+k*56)+'px')}
+requestAnimationFrame(f)})();
+
+/* ===== fix mobile/desktop ===== */
+var hd=document.querySelector('header.top');
+function mh(){document.documentElement.style.setProperty('--hh',hd.offsetHeight+'px')}
+mh();addEventListener('resize',mh);addEventListener('load',mh);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(mh);if('ResizeObserver' in window)new ResizeObserver(mh).observe(hd);
+var pfEl=$('pf');function rt(){var on=location.hash==='#profilo';pfEl.classList.toggle('on',on);document.body.classList.toggle('pfo',on);if(on)pfEl.scrollTop=0}
+addEventListener('hashchange',rt);rt();$('pfx').addEventListener('click',function(){location.hash='#auramg'});
+['fa','fl','fp'].forEach(function(id){var f=$(id);if(f)f.addEventListener('submit',function(e){e.preventDefault()})});
+setTimeout(function(){if(!done&&vid.readyState<2&&!go.classList.contains('on'))end()},15000);
+function drag(el){var d=0,mv=0,sx=0,sl=0;
+ el.addEventListener('pointerdown',function(e){if(e.pointerType!=='mouse'||e.button)return;d=1;mv=0;sx=e.clientX;sl=el.scrollLeft});
+ addEventListener('pointermove',function(e){if(!d)return;var dx=e.clientX-sx;if(Math.abs(dx)>5&&!mv){mv=1;el.style.scrollSnapType='none';el.style.cursor='grabbing'}if(mv)el.scrollLeft=sl-dx});
+ addEventListener('pointerup',function(){if(!d)return;d=0;el.style.cursor='';el.style.scrollSnapType=''});
+ el.addEventListener('click',function(e){if(mv){e.preventDefault();e.stopPropagation();mv=0}},true);
+ el.addEventListener('dragstart',function(e){e.preventDefault()})}
+drag($('chap'));drag($('mochap'));
+})();
+</script>
+
+<script type="module">
+/* Aura MG: stesso Firebase di LandraFashion (auramusic-hrz) + Cloudinary */
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js';
+import {getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut} from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js';
+import {getDatabase,ref,set,get,update,push,onValue,serverTimestamp} from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js';
+const CFG={apiKey:"AIzaSyBjQC2dOKySeHPEJCVjjEEHyHEUy19DRPY",authDomain:"auramusic-hrz.firebaseapp.com",databaseURL:"https://auramusic-hrz-default-rtdb.europe-west1.firebasedatabase.app",projectId:"auramusic-hrz",storageBucket:"auramusic-hrz.firebasestorage.app",messagingSenderId:"185420108806",appId:"1:185420108806:web:a23111fb8972763e661f87"};
+const CLOUD="dxblnwvuq",PRESET="ml_default",MAXMB=100;
+const $=i=>document.getElementById(i);
+const say=(id,t,ok)=>{const e=$(id);e.textContent=t;e.className='msg '+(t?(ok?'ok':'er'):'')};
+const ERR={'auth/invalid-credential':'Email o password non corretti.','auth/invalid-email':'Email non valida.','auth/email-already-in-use':'Questa email è già registrata: accedi.','auth/weak-password':'La password deve avere almeno 6 caratteri.','auth/too-many-requests':'Troppi tentativi. Riprova tra qualche minuto.','auth/network-request-failed':'Connessione assente. Riprova.'};
+const errTxt=e=>ERR[e&&e.code]||'Operazione non riuscita. Riprova.';
+const STAT={in_revisione:'In revisione',approvato:'Approvato',da_modificare:'Da modificare',rifiutato:'Rifiutato',integrato:'Integrato nel gioco'};
+let auth,db,user=null,unsubs=[],mode='in',prof={};
+try{const app=initializeApp(CFG,'auramgApp');auth=getAuth(app);db=getDatabase(app)}catch(e){console.error(e)}
+/* pagina profilo su #profilo */
+const pf=$('pf');
+function route(){const on=location.hash==='#profilo';pf.classList.toggle('on',on);document.body.classList.toggle('pfo',on);if(on)pf.scrollTop=0}
+addEventListener('hashchange',route);route();
+$('pfx').onclick=()=>{location.hash='#auramg'};
+/* richiesta di partecipazione */
+$('fa').addEventListener('submit',async e=>{e.preventDefault();
+ const v=k=>$(k).value.trim(),n=v('a1'),m=v('a2');
+ if(!n||!/^\S+@\S+\.\S+$/.test(m))return say('am','Inserisci nome d’arte ed email valida.');
+ try{await push(ref(db,'dominionApplications'),{artistName:n,email:m,genre:v('a3'),link:v('a4'),message:v('a5'),uid:user?user.uid:null,status:'nuova',createdAt:serverTimestamp()});e.target.reset();say('am','Richiesta inviata. Il team Aura MG ti risponderà via email.',1)}
+ catch(x){say('am','Invio non riuscito. Riprova più tardi.')}});
+/* accesso / registrazione (stesso utente di LandraFashion) */
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{mode=b.dataset.t;document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));$('nm-w').classList.toggle('hid',mode==='in');$('gd-w').classList.toggle('hid',mode==='in');$('lb-go').textContent=mode==='in'?'Accedi':'Crea account artista';$('l2').autocomplete=mode==='in'?'current-password':'new-password';say('lm','')});
+$('fl').addEventListener('submit',async e=>{e.preventDefault();
+ const em=$('l1').value.trim(),pw=$('l2').value,nm=$('l0').value.trim();
+ if(!em||!pw)return say('lm','Inserisci email e password.');
+ if(mode==='up'&&!nm)return say('lm','Inserisci il tuo nome d’arte.');
+ if(mode==='up'&&!$('gd').checked)return say('lm','È necessario accettare le condizioni GDPR.');
+ try{if(mode==='up'){const c=await createUserWithEmailAndPassword(auth,em,pw);
+   await set(ref(db,'users/'+c.user.uid),{email:em,acceptGdpr:true,tier:'free',onboarded:false,source:'dominion',createdAt:serverTimestamp()});
+   await set(ref(db,'dominionArtists/'+c.user.uid),{artistName:nm,email:em,createdAt:serverTimestamp()})}
+  else await signInWithEmailAndPassword(auth,em,pw);say('lm','')}catch(x){say('lm',errTxt(x))}});
+$('lo').onclick=()=>signOut(auth);
+/* scheda e statistiche */
+function fill(){const n=prof.artistName||'Artista';$('ar-n').textContent=n;$('avl').textContent=n[0].toUpperCase();$('navp').textContent=user?n:'Profilo';
+ const im=$('avi');if(prof.photo){im.src=prof.photo;im.hidden=false}else im.hidden=true;
+ if(!(pf.contains(document.activeElement)&&document.activeElement.tagName==='INPUT')){$('p1').value=prof.artistName||'';$('p2').value=prof.genre||'';$('p3').value=prof.link||'';$('p4').value=prof.bio||''}}
+$('fp').addEventListener('submit',async e=>{e.preventDefault();if(!user)return;
+ const n=$('p1').value.trim();if(!n)return say('pm','Inserisci il nome d’arte.');
+ try{await update(ref(db,'dominionArtists/'+user.uid),{artistName:n,genre:$('p2').value.trim(),link:$('p3').value.trim(),bio:$('p4').value.trim()});say('pm','Profilo salvato.',1)}catch(x){say('pm','Salvataggio non riuscito.')}});
+$('avf').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f||!user)return;
+ try{const fd=new FormData();fd.append('file',f);fd.append('upload_preset',PRESET);fd.append('folder','dominion-artists');
+  const r=await fetch('https://api.cloudinary.com/v1_1/'+CLOUD+'/image/upload',{method:'POST',body:fd}),j=await r.json();
+  if(j.secure_url)await update(ref(db,'dominionArtists/'+user.uid),{photo:j.secure_url})}catch(x){say('pm','Foto non caricata.')}});
+function render(list){const box=$('tl');box.textContent='';
+ $('s1').textContent=list.length;$('s2').textContent=list.filter(t=>t.status==='approvato'||t.status==='integrato').length;$('s3').textContent=list.filter(t=>t.status==='integrato').length;
+ if(!list.length){const p=document.createElement('p');p.style.cssText='font-size:14px;color:var(--m)';p.textContent='Nessun brano caricato.';box.appendChild(p);return}
+ list.forEach(t=>{const r=document.createElement('div');r.className='trk';const l=document.createElement('div'),b=document.createElement('b'),s=document.createElement('span'),st=document.createElement('span');
+  b.textContent=t.title;s.textContent=(t.genre||'—')+(t.createdAt?' · '+new Date(t.createdAt).toLocaleDateString('it-IT'):'');l.append(b,s);
+  if(t.feedback){const f=document.createElement('span');f.textContent='Nota del team: '+t.feedback;l.append(f)}
+  if(t.url){const a=document.createElement('audio');a.controls=true;a.preload='none';a.src=t.url;l.append(a)}
+  st.className='st '+(t.status||'in_revisione');st.textContent=STAT[t.status]||STAT.in_revisione;r.append(l,st);box.appendChild(r)})}
+if(auth)onAuthStateChanged(auth,async u=>{user=u;unsubs.forEach(f=>f());unsubs=[];
+ $('pf-out').classList.toggle('hid',!!u);$('pf-in').classList.toggle('hid',!u);
+ if(!u){prof={};$('navp').textContent='Profilo';return}
+ $('ar-e').textContent=u.email;
+ try{const a=await get(ref(db,'dominionArtists/'+u.uid));if(!a.exists())await set(ref(db,'dominionArtists/'+u.uid),{artistName:(u.email||'Artista').split('@')[0],email:u.email,createdAt:serverTimestamp()});
+  const c=await get(ref(db,'users/'+u.uid));if(!c.exists())await set(ref(db,'users/'+u.uid),{email:u.email,tier:'free',onboarded:false,source:'dominion',createdAt:serverTimestamp()})}catch(e){}
+ unsubs.push(onValue(ref(db,'dominionArtists/'+u.uid),s=>{prof=s.val()||{};fill()}));
+ unsubs.push(onValue(ref(db,'users/'+u.uid+'/tier'),s=>{$('tier').textContent='Piano '+(s.val()||'free')}));
+ unsubs.push(onValue(ref(db,'dominionTracks/'+u.uid),s=>{const o=s.val()||{};render(Object.keys(o).map(k=>({id:k,...o[k]})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)))}))});
+/* upload automatico su Cloudinary: parte appena scegli i file */
+function up(file,onp){return new Promise((res,rej)=>{const fd=new FormData();fd.append('file',file);fd.append('upload_preset',PRESET);fd.append('folder','dominion-soundtrack');
+ const x=new XMLHttpRequest();x.open('POST','https://api.cloudinary.com/v1_1/'+CLOUD+'/video/upload');
+ x.upload.onprogress=e=>{if(e.lengthComputable)onp(e.loaded/e.total)};
+ x.onload=()=>{try{const j=JSON.parse(x.responseText);x.status<300&&j.secure_url?res(j):rej(Error((j.error&&j.error.message)||'Upload fallito'))}catch(e){rej(e)}};
+ x.onerror=()=>rej(Error('Connessione assente'));x.send(fd)})}
+async function queue(f){if(!user)return;
+ const row=document.createElement('div');row.className='up';const name=f.name.replace(/\.[^.]+$/,'');row.innerHTML='<b></b> <span></span><div class="prog"><b></b></div>';row.querySelector('b').textContent=name;$('uq').prepend(row);
+ const sp=row.querySelector('span'),fill=row.querySelector('.prog b');
+ if(!/^audio\//.test(f.type)&&!/\.(mp3|wav|flac|m4a|ogg|aac)$/i.test(f.name)){sp.textContent='· non è un file audio';return}
+ if(f.size>MAXMB*1048576){sp.textContent='· supera '+MAXMB+' MB';return}
+ sp.textContent='· in caricamento…';
+ try{const j=await up(f,p=>fill.style.width=(p*100)+'%');
+  await push(ref(db,'dominionTracks/'+user.uid),{title:name,genre:prof.genre||'',notes:$('u3').value.trim(),url:j.secure_url,publicId:j.public_id,duration:j.duration||null,status:'in_revisione',createdAt:Date.now()});
+  sp.textContent='· caricato, in revisione';fill.style.width='100%'}catch(x){sp.textContent='· non riuscito: '+(x.message||'riprova')}}
+async function many(fs){for(const f of fs)await queue(f)}
+$('u4').addEventListener('change',e=>{const fs=[...e.target.files];e.target.value='';many(fs)});
+const dz=$('dz');['dragover','dragenter'].forEach(t=>dz.addEventListener(t,e=>{e.preventDefault();dz.classList.add('dv')}));
+['dragleave','drop'].forEach(t=>dz.addEventListener(t,e=>{e.preventDefault();dz.classList.remove('dv');if(t==='drop')many([...e.dataTransfer.files])}));
+</script>
+</body></html>
